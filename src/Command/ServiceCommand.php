@@ -27,6 +27,9 @@ class ServiceCommand extends Command
     {
         $parser = parent::buildOptionParser($parser);
         
+        /**
+         * we can add `required` key
+         */
         $parser->addArgument('serviceName', [
             'help' => 'New service name'
         ]);
@@ -55,6 +58,7 @@ class ServiceCommand extends Command
             $io->out('Service name needed it. Please set the name. Example: `bin/cake bake service MyService`');
             exit;
         }
+
         if ($this->exists($service)) {
             $io->out('The service class already exists!');
             exit;
@@ -62,7 +66,7 @@ class ServiceCommand extends Command
 
         try {
             $this->createServiceClass($service);
-            $io->out(sprintf('Service generated correctly! Stored in App/Services/%s!', $service));
+            $io->out(sprintf('Service generated correctly! Stored in App/Services/%s', $service));
             exit;
         } catch (\Throwable $th) {
             /** @todo implement custom Exception */
@@ -103,12 +107,24 @@ class ServiceCommand extends Command
         $this->setSyntax($file, $serviceName);
     }
 
+    /**
+     * write the new service class file
+     * @param resource $file
+     * @param string $newService
+     * @return bool|int
+     */
     private function setSyntax($file, $newService)
     {
         $frame = $this->skeleton($newService);
 
         return fwrite($file, $frame);
     }
+
+    /**
+     * set the information that is going to be in the class
+     * @param string $newService
+     * @return string skeleton
+     */
     private function skeleton(string $newService)
     {
         return "<?php \n \n namespace App\Services; \n \n class ".ucfirst($newService)."Service \n { \n \n \t// do stuff \n \tpublic function doSmth() \n \t{ \n \t} \n }";
