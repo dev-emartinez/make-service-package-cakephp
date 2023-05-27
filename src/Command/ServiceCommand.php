@@ -7,7 +7,6 @@ use Cake\Command\Command;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
-use SebastianBergmann\Type\VoidType;
 
 /**
  * Service command.
@@ -36,11 +35,17 @@ class ServiceCommand extends Command
 
         return $parser;
     }
+    
 
     public function initialize() :void
     {
         $this->verifyFolder();
         $this->svcPath = APP_DIR.DS.'Services';
+    }
+
+    public static function defaultName(): string
+    {
+        return 'bake service';
     }
 
     /**
